@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 from sys import argv
+import random
 
-script, working_file = argv 
+
 
 def make_chains(corpus):
     """Takes an input text as a string and returns a dictionary of
@@ -23,34 +24,42 @@ def make_chains(corpus):
         else:
             bigram_dict[key_pair] = [value]
 
+    # corpus.close()
+    # for key, value in bigram_dict.items():
+    #     print key, value
+    return bigram_dict
+
+
+def make_text(chains):
+    """Takes a dictionary of markov chains and returns random text
+    based off an original text."""
     
-    
-    for key, value in bigram_dict.items():
-        print key, value
+    random_key = random.choice(chains.keys())
+    random_value = random.choice(chains[random_key])
+    first_word = random_key[0]
+    second_word = random_key[1]
+    # print "%s %s %s" % (first_word, second_word, random_value)
+    final_string = "%s %s %s" % (first_word, second_word, random_value)
 
+    while random_key in chains:
+        random_key = (random_key[1], random_value)
+        if random_key in chains:
+            random_value = random.choice(chains[random_key])
+            final_string += " %s" % random_value
+        else:
+            break
 
+    return final_string
+ 
+def main():
+    script, working_file = argv 
+    # Change this to read input_text from a file
+    input_text = working_file
 
+    chain_dict = make_chains(input_text)
+    random_text = make_text(chain_dict)
+    print random_text
 
+if __name__ == "__main__":
+    main()
 
-make_chains(working_file)
-
-    # return {}
-
-
-# def make_text(chains):
-#     """Takes a dictionary of markov chains and returns random text
-#     based off an original text."""
-#     return "Here's some random text."
-
-# def main():
-#     args = sys.argv
-
-#     # Change this to read input_text from a file
-#     input_text = "Some text"
-
-#     chain_dict = make_chains(input_text)
-#     random_text = make_text(chain_dict)
-#     print random_text
-
-# if __name__ == "__main__":
-#     main()
