@@ -3,20 +3,17 @@
 from sys import argv
 import random
 
-
-
 def make_chains(corpus):
     """Takes an input text as a string and returns a dictionary of
     markov chains."""
-    working_file = open(corpus).read()
-    list_words = working_file.split()
+    working_file = open(corpus)
+    list_words = working_file.read().split()
     bigram_dict = {}
 
-    for item in range(len(list_words)-2):
-
-        word = list_words[int(item)] 
-        next_word = list_words[(int(item) + 1)] 
-        value = list_words[(int(item) + 2)] 
+    for num in range(len(list_words)-2):
+        word = list_words[num] 
+        next_word = list_words[num + 1] 
+        value = list_words[num + 2] 
         key_pair = (word, next_word) 
         
         if key_pair in bigram_dict:
@@ -24,31 +21,43 @@ def make_chains(corpus):
         else:
             bigram_dict[key_pair] = [value]
 
-    # corpus.close()
-    # for key, value in bigram_dict.items():
+    # for key, value in bigram_dict.nums():
     #     print key, value
-    return bigram_dict
 
+    working_file.close()
+
+    return bigram_dict
 
 def make_text(chains):
     """Takes a dictionary of markov chains and returns random text
     based off an original text."""
-    
+    #Generating a random key pair to begin with
     random_key = random.choice(chains.keys())
     random_value = random.choice(chains[random_key])
     first_word = random_key[0]
     second_word = random_key[1]
-    # print "%s %s %s" % (first_word, second_word, random_value)
-    final_string = "%s %s %s" % (first_word, second_word, random_value)
+    #Initializing beginning of string
+    final_string = "%s %s" % (first_word, second_word)
 
-    while random_key in chains:
+    #reassigning random key generators to iterate through dictionary to lengthen final string
+    #will exit loop once last random key generated is not found in dictionary and if final string length is under 140
+    while random_key in chains and len(final_string) < 115:
+        random_value = random.choice(chains[random_key])
+        final_string += " %s" % random_value
         random_key = (random_key[1], random_value)
-        if random_key in chains:
-            random_value = random.choice(chains[random_key])
-            final_string += " %s" % random_value
-        else:
-            break
 
+    #formatting final string to our specifications
+    final_string = final_string.lower().capitalize()
+    final_string_list = list(final_string)
+
+    for num in range(len(final_string_list) -1):
+        ch = final_string_list[num]
+        if ch in "?.!":
+            nch_index = num + 2
+            final_string_list[nch_index] = final_string_list[nch_index].upper()
+
+    
+    final_string = "".join(final_string_list) + ". Namaste! -Obama Lama"
     return final_string
  
 def main():
@@ -62,4 +71,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
