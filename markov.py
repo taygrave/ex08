@@ -45,6 +45,9 @@ def make_text(chains):
         random_value = random.choice(chains[random_key])
         final_string += " %s" % random_value
         random_key = (random_key[1], random_value)
+        # Telling loop to exit if we've reached a natural end to a sentence in time
+        if len(final_string) > 90 and random_value[-1] == ".":
+            break
 
     #formatting final string to our specifications
     final_string = final_string.lower().capitalize()
@@ -57,17 +60,18 @@ def make_text(chains):
             final_string_list[nch_index] = final_string_list[nch_index].upper()
 
     
-    final_string = "".join(final_string_list) + ". Namaste! -Obama Lama"
+    final_string = "".join(final_string_list) + " Namaste! -Obama Lama"
     return final_string
  
 def main():
-    script, working_file = argv 
+    # script, working_file = argv 
     # Change this to read input_text from a file
-    input_text = working_file
+    # input_text = working_file
+    input_text = "obamalama.txt"
 
     chain_dict = make_chains(input_text)
     random_text = make_text(chain_dict)
-    print random_text
+    return random_text
 
 if __name__ == "__main__":
     main()
